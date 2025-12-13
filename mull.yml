@@ -1,0 +1,3 @@
+mutators:
+  - cxx_comparison
+  - cxx_logical
