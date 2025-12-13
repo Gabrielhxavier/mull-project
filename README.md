@@ -107,3 +107,51 @@ mull-project/
 ```
 
 Essa estrutura é suficiente para executar os testes unitários com o Unity e realizar a instrumentação e execução do mutation testing com o Mull.
+
+## 🧩 Sistema sob Teste (SUT)
+
+O sistema sob teste consiste em uma função que determina o estado do freio a partir de duas entradas:
+
+- `pos` (posição do pedal do freio): valor esperado entre **0 e 100**
+- `brake_switch` (sensor de acionamento): **0 (desligado)** ou **1 (ligado)**
+
+A função retorna uma string representando o estado do sistema, por exemplo:
+- `released`
+- `inconclusive`
+- `brake_light`
+- `brake_hard`
+- `brake_invalid`
+
+> Observação: o código é propositalmente simples, pois o objetivo principal é evidenciar a técnica de mutation testing.
+
+---
+
+## ✅ Suíte de Testes (Unity)
+
+Os testes unitários foram implementados utilizando o framework **Unity**, com 7 casos cobrindo:
+- valores inválidos de entrada
+- comportamento para freio solto (posição 0 e sensor desligado)
+- condições inconclusivas
+- freio leve e forte
+
+A execução dos testes unitários serve como linha de base (baseline) antes da aplicação de mutações.
+
+---
+
+## 🧬 Configuração do Mull (`mull.yml`)
+
+A ferramenta Mull foi configurada através do arquivo `mull.yml`.  
+Para este projeto, foram utilizados os seguintes grupos de mutadores:
+
+- `cxx_comparison` (mutações em operadores de comparação: `<`, `>`, `<=`, `==`, etc.)
+- `cxx_logical` (mutações em operadores lógicos: `&&`, `||`)
+
+Esses mutadores são adequados para o SUT, pois o código contém predominantemente condições e comparações.
+
+Exemplo:
+
+```yaml
+mutators:
+  - cxx_comparison
+  - cxx_logical
+
