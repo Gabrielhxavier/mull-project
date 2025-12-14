@@ -427,3 +427,12 @@ O Mull oferece suporte a diversos operadores de mutação, responsáveis por mod
 A descrição detalhada dos operadores suportados, juntamente com exemplos, pode ser encontrada no documento:
 
 ➡️ [`docs/Mutators.rst`](./Mutators.rst)
+
+### Configuração do Mull
+
+O Mull permite configurar quais operadores de mutação serão utilizados, além de definir filtros de arquivos e outras opções por meio do arquivo `mull.yml`.
+
+As opções de configuração e exemplos práticos estão documentados em:
+
+➡️ [`docs/configuring_mull.md`](./configuring_mull.md)
+
