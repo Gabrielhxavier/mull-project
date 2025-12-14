@@ -200,7 +200,7 @@ mull-runner-19 ./test_brake_status.mull -ide-reporter-show-killed
 ```
 ## 📊 Resultados
 A execução do Mull gera, no terminal, um relatório detalhado contendo informações sobre a geração, execução e detecção dos mutantes. A saída observada para este experimento é apresentada a seguir:
-```
+```text
 [info] Warm up run (threads: 1)
        [################################] 1/1. Finished in 2ms
 [info] Filter mutants (threads: 1)
@@ -264,3 +264,152 @@ Além disso, o relatório apresenta informações relevantes sobre:
 * número total de mutantes gerados,
 * número de mutantes mortos,
 * mutation score final.
+
+## 📑 Customização e tipos de relatórios do Mull
+
+Além da saída padrão exibida no terminal, o Mull oferece diferentes **formatos de relatório**, que permitem analisar os resultados do mutation testing em maior nível de detalhe.  
+Esses relatórios são configurados por meio da opção `--reporters`, combinada com o diretório de saída definido por `--report-dir`.
+
+---
+
+## 🖥️ Relatório no terminal (IDE Reporter)
+
+O relatório padrão do Mull é exibido diretamente no terminal.  
+Para visualizar explicitamente os **mutantes mortos**, foi utilizada a opção:
+
+```bash
+mull-runner-19 ./test_brake_status.mull -ide-reporter-show-killed
+```
+Esse modo apresenta:
+* localização exata da mutação (arquivo, linha e coluna),
+* operador original e operador mutado,
+* tipo de mutador aplicado,
+* resumo final com mutation score e tempo de execução.
+Esse formato é útil para análise rápida.
+
+
+## 🖥️ Relatório em formato de patches
+O Patch Reporter gera arquivos .patch, onde cada arquivo representa uma mutação aplicada ao código, no formato de um diff semelhante ao utilizado pelo Git.
+```bash
+mkdir -p patches
+
+mull-runner-19 ./test_brake_status.mull \
+  --reporters=Patches \
+  --report-dir=patches
+```
+Após a execução, o diretório patches/ contém arquivos .patch, cada um descrevendo:
+* a linha original do código,
+* a mutação aplicada,
+* a alteração sintática introduzida pelo mutador.
+
+Esse tipo de relatório é especialmente útil para:
+* compreender visualmente cada mutação,
+* revisar mutações individualmente,
+* demonstrar o impacto das mutações no código-fonte.
+
+Exemplo de um .patch:
+```text
+--- a/home/gabriel/brake_status/brake_status.c 0
++++ b/home/gabriel/brake_status/brake_status.c 0
+@@ -9,1 +9,1 @@
+-    else if((pos == 0) && (brake_switch == 0))
++    else if((pos != 0) && (brake_switch == 0))
+--
+LLVM Version: 19.1.1
+Mull Version: 0.27.1
+URL: https://github.com/mull-project/mull
+
+```
+É possível ainda aplicar os .patch ao código fonte.
+Para mais informações sobre a aplicação de patches, consulte a documentação oficial do Mull:  
+https://mull.readthedocs.io/en/latest/tutorials/GeneratePatches.html
+
+## 🖥️ Relatório em SQLite
+O SQLite Reporter gera um banco de dados relacional contendo informações detalhadas sobre todos os mutantes e suas execuções.
+```bash
+mkdir -p reports
+
+mull-runner-19 ./test_brake_status.mull \
+  --reporters=SQLite \
+  --report-dir=reports
+```
+O arquivo gerado (.sqlite dentro de reports) pode ser analisado utilizando a ferramenta sqlite3 através de queries.
+
+Exemplo de acesso ao banco de dados:
+```bash
+sqlite3 reports/.sqlite
+```
+O banco de dados contém duas tabelas: mutant e information.
+
+A tabela de informações armazena uma série de pares chave/valor com determinados dados sobre o Mull e a tabela de mutantes armazena o nome do operador de mutação, a localização do mutante e informações sobre a execução de cada mutante: duração, status (morto ou sobrevivente) e a saída dos testes associada a cada mutante.
+
+### Exemplo de consultas:
+#### Selecionar todas as linhas da tabela mutant:
+```bash
+.headers on
+.mode column
+SELECT * FROM mutant;
+```
+Saída esperada (primeira linha):
+```text
+mutant_id                                                     mutator       filename                                   directory  line_number  column_number  end_line_number  end_column_number  status  duration  stdout                                                        stderr
+------------------------------------------------------------  ------------  -----------------------------------------  ---------  -----------  -------------  ---------------  -----------------  ------  --------  ------------------------------------------------------------  ------
+cxx_lt_to_ge:/home/gabriel/brake_status/brake_status.c:4:12:  cxx_lt_to_ge  /home/gabriel/brake_status/brake_status.c             4            12             4                13                 1       4         test_brake_status.c:46:test_invalid1:PASS
+4:13                                                                                                                                                                                                                test_brake_status.c:47:test_invalid2:PASS
+                                                                                                                                                                                                                    test_brake_status.c:19:test_released:FAIL: Expected 'release
+                                                                                                                                                                                                                    d' Was 'brake_invalid'
+                                                                                                                                                                                                                    test_brake_status.c:24:test_inconclusive1:FAIL: Expected 'in
+                                                                                                                                                                                                                    conclusive' Was 'brake_invalid'
+                                                                                                                                                                                                                    test_brake_status.c:29:test_inconclusive2:FAIL: Expected 'in
+                                                                                                                                                                                                                    conclusive' Was 'brake_invalid'
+                                                                                                                                                                                                                    test_brake_status.c:34:test_light:FAIL: Expected 'brake_ligh
+                                                                                                                                                                                                                    t' Was 'brake_invalid'
+                                                                                                                                                                                                                    test_brake_status.c:39:test_hard:FAIL: Expected 'brake_hard'
+                                                                                                                                                                                                                     Was 'brake_invalid'
+```
+O campo `status` armazena um valor numérico, cujo significado é descrito na tabela a seguir:
+
+| Valor numérico | Valor textual   | Descrição                                                                 |
+|---------------|-----------------|---------------------------------------------------------------------------|
+| 1             | Failed          | O teste falhou (o código de saída é diferente de 0).                      |
+| 2             | Passed          | O teste foi executado com sucesso (o código de saída é igual a 0).        |
+| 3             | Timedout        | A execução do teste excedeu o tempo máximo permitido.                     |
+| 4             | Crashed         | O programa de teste foi finalizado de forma abrupta (crash).              |
+| 5             | AbnormalExit    | O programa de teste foi encerrado explicitamente (por exemplo, `exit(1)`).|
+| 6             | DryRun          | O teste não foi executado (modo *Dry Run* habilitado).                    |
+| 7             | FailFast        | O mutante já foi morto por outro teste, portanto esta execução foi ignorada.|
+
+#### Quantidade de mutantes por tipo:
+```bash
+SELECT mutator, COUNT(*) 
+FROM mutant 
+GROUP BY mutator;
+```
+#### Resumo do status dos mutantes:
+```bash
+SELECT status, COUNT(*) 
+FROM mutant 
+GROUP BY status;
+```
+## 🖥️ MutationTestingElementsReporter:
+ **MutationTestingElementsReporter** gera um relatório em **formato JSON**, compatível com o padrão **Mutation Testing Elements (MTE)**.
+
+Esse padrão define uma **estrutura comum de dados** para resultados de mutation testing, permitindo que diferentes ferramentas e plataformas consumam e processem os resultados de forma padronizada.
+
+Entretanto, na versão do Mull utilizada neste projeto (Mull 19), esse reporter não está disponível.
+
+Para mais informações, consulte:  
+[https://mull.readthedocs.io/en/latest/tutorials/GeneratePatches.html](https://github.com/stryker-mutator/mutation-testing-elements)
+
+## 🔗 Junção e uso combinado de relatórios de mutação
+
+O Mull permite a geração de diferentes tipos de relatórios a partir de uma mesma execução de mutation testing:
+
+```bash
+mkdir -p patches
+
+mull-runner-19 ./test_brake_status.mull \
+  --reporters=IDE,Patches \
+  --report-dir=patches \
+  -ide-reporter-show-killed
+```
