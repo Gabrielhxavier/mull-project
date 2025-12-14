@@ -413,3 +413,17 @@ mull-runner-19 ./test_brake_status.mull \
   --report-dir=patches \
   -ide-reporter-show-killed
 ```
+## Conceitos adicionais do Mull
+
+Esta seção tem como objetivo apresentar conceitos importantes do Mull que influenciam diretamente seu uso e configuração. 
+Para evitar a sobrecarga deste relatório principal, esses tópicos foram documentados de forma separada, em arquivos específicos, disponíveis no diretório `docs/`.
+
+Os tópicos abordados incluem os operadores de mutação suportados, as formas de configuração do Mull e as ferramentas de build com as quais o Mull pode ser integrado.
+
+### Operadores de mutação suportados
+
+O Mull oferece suporte a diversos operadores de mutação, responsáveis por modificar expressões aritméticas, lógicas, comparações e outras construções do código-fonte.
+
+A descrição detalhada dos operadores suportados, juntamente com exemplos, pode ser encontrada no documento:
+
+➡️ [`docs/supported_mutation_operators.md`](./supported_mutation_operators.md)
