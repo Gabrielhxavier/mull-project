@@ -73,7 +73,7 @@ Após a instalação do Mull e das dependências do compilador, o próximo passo
 Clone o repositório utilizando o Git:
 
 ```bash
-git clone https://github.com/GabrielXavier/mull-project
+git clone https://github.com/Gabrielhxavier/mull-project
 cd mull-project
 ```
 Esse repositório contém:
