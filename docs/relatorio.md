@@ -80,6 +80,7 @@ Esse repositório contém:
 * O código sob teste (brake_status.c)
 * A suíte de testes unitários (teste_brake_status.c)
 * O arquivo de configuração do Mull (mull.yml)
+* A documentação conceitual e de apoio (diretório docs/)
 
 ## 🔽 Passo 3 — Clonar o framework de testes Unity
 
@@ -100,6 +101,12 @@ mull-project/
 ├── brake_status.c
 ├── test_brake_status.c
 ├── mull.yml
+├── README.md
+├── docs/
+│   ├── configuring_mull.md
+│   ├── operation_modes.md
+│   ├── Mutators.rst
+│   └── relatorio.md
 └── unity/
     └── src/
         ├── unity.c
@@ -443,4 +450,11 @@ O Mull pode ser usado em diferentes modos de operação: standalone e integrado 
 Os modos de operação do Mull são apresentados de forma mais detalhada em:
 
 ➡️ [`docs/operation_modes.md`](./operation_modes.md)
+
+## Considerações finais
+Os tópicos apresentados neste relatório foram elaborados com base na documentação oficial do Mull.
+Para aprofundar o conhecimento e explorar funcionalidades adicionais, recomenda-se consultar diretamente a documentação oficial, disponível nos seguintes canais:
+- Repositório GitHub: https://github.com/mull-project/mull
+- Documentação online: https://mull.readthedocs.io/en/latest
+
 
