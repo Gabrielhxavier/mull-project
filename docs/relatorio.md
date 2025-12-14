@@ -426,4 +426,4 @@ O Mull oferece suporte a diversos operadores de mutação, responsáveis por mod
 
 A descrição detalhada dos operadores suportados, juntamente com exemplos, pode ser encontrada no documento:
 
-➡️ [`docs/supported_mutation_operators.md`](./Mutators.rst)
+➡️ [`docs/Mutators.rst`](./Mutators.rst)
