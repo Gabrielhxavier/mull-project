@@ -154,4 +154,113 @@ Exemplo:
 mutators:
   - cxx_comparison
   - cxx_logical
+```
+## ▶️ Execução dos testes e mutation testing
+Esta seção descreve o procedimento adotado para a execução dos testes unitários e, em seguida, para a aplicação do **mutation testing** utilizando a ferramenta **Mull**.
 
+### Testes unitários
+Inicialmente, os testes unitários são compilados e executados **sem o uso do Mull**, com o objetivo de validar a suíte de testes antes da aplicação das mutações.
+
+A compilação é realizada com o compilador Clang:
+
+```bash
+clang-19 test_brake_status.c unity/src/unity.c -o test_brake_status
+```
+
+Em seguida, os testes são executados:
+```bash
+./test_brake_status
+```
+
+A saída esperada indica que todos os testes foram executados com sucesso, servindo como baseline para a etapa de mutation testing.
+
+### Compilação instrumentada e execução do mull
+Para a aplicação do mutation testing, é necessário gerar um executável instrumentado com o plugin do Mull.
+
+Primeiramente, o framework de testes Unity é compilado separadamente, sem o plugin do Mull, uma vez que não faz parte do código sob teste:
+```bash
+clang-19 -Iunity/src -c unity/src/unity.c -o unity.o
+```
+Em seguida, o arquivo de testes (que inclui o código sob teste) é compilado com o plugin de instrumentação do Mull, responsável por gerar os mutantes a partir do código:
+```bash
+clang-19 \
+  -fpass-plugin=/usr/lib/mull-ir-frontend-19 \
+  -g -grecord-command-line \
+  -Iunity/src \
+  -c test_brake_status.c -o test_brake_status.o
+```
+Após a compilação, os arquivos objeto são linkados para a geração do executável instrumentado:
+```bash
+clang-19 test_brake_status.o unity.o -o test_brake_status.mull
+```
+
+Por fim, o Mull é executado sobre o binário instrumentado:
+```bash
+mull-runner-19 ./test_brake_status.mull -ide-reporter-show-killed
+```
+## 📊 Resultados
+A execução do Mull gera, no terminal, um relatório detalhado contendo informações sobre a geração, execução e detecção dos mutantes. A saída observada para este experimento é apresentada a seguir:
+```
+[info] Warm up run (threads: 1)
+       [################################] 1/1. Finished in 2ms
+[info] Filter mutants (threads: 1)
+       [################################] 1/1. Finished in 0ms
+[info] Baseline run (threads: 1)
+       [################################] 1/1. Finished in 2ms
+[info] Running mutants (threads: 12)
+       [################################] 13/13. Finished in 18ms
+[info] Killed mutants (13/13):
+/home/gabriel/brake_status/brake_status.c:4:12: warning: Killed: Replaced < with >= [cxx_lt_to_ge]
+    if(pos < 0  || pos > 100)
+           ^
+/home/gabriel/brake_status/brake_status.c:4:24: warning: Killed: Replaced > with <= [cxx_gt_to_le]
+    if(pos < 0  || pos > 100)
+                       ^
+/home/gabriel/brake_status/brake_status.c:9:18: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if((pos == 0) && (brake_switch == 0))
+                 ^
+/home/gabriel/brake_status/brake_status.c:9:41: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if((pos == 0) && (brake_switch == 0))
+                                        ^
+/home/gabriel/brake_status/brake_status.c:14:19: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if(((pos == 0) && (brake_switch == 1)) || ((pos > 0) && (brake_switch == 0)))
+                  ^
+/home/gabriel/brake_status/brake_status.c:14:42: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if(((pos == 0) && (brake_switch == 1)) || ((pos > 0) && (brake_switch == 0)))
+                                         ^
+/home/gabriel/brake_status/brake_status.c:14:58: warning: Killed: Replaced > with <= [cxx_gt_to_le]
+    else if(((pos == 0) && (brake_switch == 1)) || ((pos > 0) && (brake_switch == 0)))
+                                                         ^
+/home/gabriel/brake_status/brake_status.c:14:80: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if(((pos == 0) && (brake_switch == 1)) || ((pos > 0) && (brake_switch == 0)))
+                                                                               ^
+/home/gabriel/brake_status/brake_status.c:19:18: warning: Killed: Replaced > with <= [cxx_gt_to_le]
+    else if((pos > 0  && pos <= 30) && (brake_switch == 1))
+                 ^
+/home/gabriel/brake_status/brake_status.c:19:30: warning: Killed: Replaced <= with > [cxx_le_to_gt]
+    else if((pos > 0  && pos <= 30) && (brake_switch == 1))
+                             ^
+/home/gabriel/brake_status/brake_status.c:19:54: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if((pos > 0  && pos <= 30) && (brake_switch == 1))
+                                                     ^
+/home/gabriel/brake_status/brake_status.c:24:18: warning: Killed: Replaced > with <= [cxx_gt_to_le]
+    else if((pos > 30) && (brake_switch == 1))
+                 ^
+/home/gabriel/brake_status/brake_status.c:24:41: warning: Killed: Replaced == with != [cxx_eq_to_ne]
+    else if((pos > 30) && (brake_switch == 1))
+                                        ^
+[info] All mutations have been killed
+[info] Mutation score: 100%
+[info] Total execution time: 29ms
+```
+O uso da opção -ide-reporter-show-killed permite que o relatório seja exibido diretamente no terminal, onde cada linha indica:
+* o arquivo e linha onde a mutação foi aplicada,
+* o operador original e o operador mutado,
+* o tipo de mutador utilizado (por exemplo, cxx_eq_to_ne, cxx_gt_to_le).
+
+Além disso, o relatório apresenta informações relevantes sobre:
+
+* tempo de execução dos testes,
+* número total de mutantes gerados,
+* número de mutantes mortos,
+* mutation score final.
