@@ -354,7 +354,11 @@ A tabela de informações armazena uma série de pares chave/valor com determina
 #### Selecionar todas as linhas da tabela mutant:
 ```bash
 .headers on
+```
+```bash
 .mode column
+```
+```bash
 SELECT * FROM mutant;
 ```
 Saída esperada (primeira linha):
