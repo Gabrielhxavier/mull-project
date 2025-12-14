@@ -28,5 +28,7 @@ mull-project/
 ```
 Para executar o passo a passo completo do desenvolvimento e da utilização da ferramenta, consulte o arquivo:
 
+➡️ [`docs/relatorio.md`](./docs/relatorio.md)
+
 ## 👨‍💻 Autor
 Desenvolvido por: Gabriel Xavier
