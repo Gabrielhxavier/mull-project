@@ -436,3 +436,11 @@ As opções de configuração e exemplos práticos estão documentados em:
 
 ➡️ [`docs/configuring_mull.md`](./configuring_mull.md)
 
+### Modos de operação do Mull
+
+O Mull pode ser usado em diferentes modos de operação: standalone e integrado a ferramentas de build.
+
+Os modos de operação do Mull são apresentados de forma mais detalhada em:
+
+➡️ [`docs/operation_modes.md`](./operation_modes.md)
+
