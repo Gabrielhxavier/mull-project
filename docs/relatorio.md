@@ -1,4 +1,4 @@
-# 🧬 mull-project
+# mull-project
 
 Este projeto tem como objetivo **demonstrar o uso de mutation testing** em código C, utilizando a ferramenta **Mull**, integrada ao framework de testes **Unity**.
 
@@ -6,7 +6,7 @@ Os passos abaixo mostram como configurar o ambiente e executar o projeto no **Ub
 
 ---
 
-## 🖥️ Ambiente de execução
+## Ambiente de execução
 
 O projeto foi desenvolvido e executado no seguinte ambiente:
 
@@ -16,7 +16,7 @@ O projeto foi desenvolvido e executado no seguinte ambiente:
 
 ---
 
-## 🔧 Passo 1 — Instalação do Mull
+## Passo 1 — Instalação do Mull
 
 ### 1.1 Adicionar o repositório oficial do Mull
 
@@ -66,7 +66,7 @@ Verifique se a instalação foi bem sucedida:
 clang-19 --version
 ```
 
-## 🔽 Passo 2 — Download do projeto e código-fonte
+## Passo 2 — Download do projeto e código-fonte
 
 Após a instalação do Mull e das dependências do compilador, o próximo passo é obter o código-fonte do projeto.
 
@@ -82,7 +82,7 @@ Esse repositório contém:
 * O arquivo de configuração do Mull (mull.yml)
 * A documentação conceitual e de apoio (diretório docs/)
 
-## 🔽 Passo 3 — Clonar o framework de testes Unity
+## Passo 3 — Clonar o framework de testes Unity
 
 O projeto utiliza Unity, um framework leve para testes unitários em C.
 
@@ -115,7 +115,7 @@ mull-project/
 
 Essa estrutura é suficiente para executar os testes unitários com o Unity e realizar a instrumentação e execução do mutation testing com o Mull.
 
-## 🧩 Sistema sob Teste (SUT)
+## Sistema sob Teste (SUT)
 
 O sistema sob teste consiste em uma função que determina o estado do freio a partir de duas entradas:
 
@@ -133,7 +133,7 @@ A função retorna uma string representando o estado do sistema, por exemplo:
 
 ---
 
-## ✅ Suíte de Testes (Unity)
+## Suíte de Testes (Unity)
 
 Os testes unitários foram implementados utilizando o framework **Unity**, com 7 casos cobrindo:
 - valores inválidos de entrada
@@ -145,7 +145,7 @@ A execução dos testes unitários serve como linha de base (baseline) antes da 
 
 ---
 
-## 🧬 Configuração do Mull (`mull.yml`)
+## Configuração do Mull (`mull.yml`)
 
 A ferramenta Mull foi configurada através do arquivo `mull.yml`.  
 Para este projeto, foram utilizados os seguintes grupos de mutadores:
@@ -162,7 +162,7 @@ mutators:
   - cxx_comparison
   - cxx_logical
 ```
-## ▶️ Execução dos testes e mutation testing
+## Execução dos testes e mutation testing
 Esta seção descreve o procedimento adotado para a execução dos testes unitários e, em seguida, para a aplicação do **mutation testing** utilizando a ferramenta **Mull**.
 
 ### Testes unitários
@@ -205,7 +205,7 @@ Por fim, o Mull é executado sobre o binário instrumentado:
 ```bash
 mull-runner-19 ./test_brake_status.mull -ide-reporter-show-killed
 ```
-## 📊 Resultados
+## Resultados
 A execução do Mull gera, no terminal, um relatório detalhado contendo informações sobre a geração, execução e detecção dos mutantes. A saída observada para este experimento é apresentada a seguir:
 ```text
 [info] Warm up run (threads: 1)
@@ -272,14 +272,14 @@ Além disso, o relatório apresenta informações relevantes sobre:
 * número de mutantes mortos,
 * mutation score final.
 
-## 📑 Customização e tipos de relatórios do Mull
+## Customização e tipos de relatórios do Mull
 
 Além da saída padrão exibida no terminal, o Mull oferece diferentes **formatos de relatório**, que permitem analisar os resultados do mutation testing em maior nível de detalhe.  
 Esses relatórios são configurados por meio da opção `--reporters`, combinada com o diretório de saída definido por `--report-dir`.
 
 ---
 
-## 🖥️ Relatório no terminal (IDE Reporter)
+## Relatório no terminal (IDE Reporter)
 
 O relatório padrão do Mull é exibido diretamente no terminal.  
 Para visualizar explicitamente os **mutantes mortos**, foi utilizada a opção:
@@ -295,7 +295,7 @@ Esse modo apresenta:
 Esse formato é útil para análise rápida.
 
 
-## 🖥️ Relatório em formato de patches
+## Relatório em formato de patches
 O Patch Reporter gera arquivos .patch, onde cada arquivo representa uma mutação aplicada ao código, no formato de um diff semelhante ao utilizado pelo Git.
 ```bash
 mkdir -p patches
@@ -331,7 +331,7 @@ URL: https://github.com/mull-project/mull
 Para mais informações sobre a aplicação de patches, consulte a documentação oficial do Mull:  
 https://mull.readthedocs.io/en/latest/tutorials/GeneratePatches.html
 
-## 🖥️ Relatório em SQLite
+## Relatório em SQLite
 O SQLite Reporter gera um banco de dados relacional contendo informações detalhadas sobre todos os mutantes e suas execuções.
 ```bash
 mkdir -p reports
@@ -402,7 +402,7 @@ SELECT status, COUNT(*)
 FROM mutant 
 GROUP BY status;
 ```
-## 🖥️ MutationTestingElementsReporter:
+## MutationTestingElementsReporter:
  **MutationTestingElementsReporter** gera um relatório em **formato JSON**, compatível com o padrão **Mutation Testing Elements (MTE)**.
 
 Esse padrão define uma **estrutura comum de dados** para resultados de mutation testing, permitindo que diferentes ferramentas e plataformas consumam e processem os resultados de forma padronizada.
@@ -412,7 +412,7 @@ Entretanto, na versão do Mull utilizada neste projeto (Mull 19), esse reporter 
 Para mais informações, consulte:  
 [https://mull.readthedocs.io/en/latest/tutorials/GeneratePatches.html](https://github.com/stryker-mutator/mutation-testing-elements)
 
-## 🔗 Junção e uso combinado de relatórios de mutação
+## Junção e uso combinado de relatórios de mutação
 
 O Mull permite a geração de diferentes tipos de relatórios a partir de uma mesma execução de mutation testing:
 
@@ -437,7 +437,7 @@ O Mull oferece suporte a diversos operadores de mutação, responsáveis por mod
 
 A descrição detalhada dos operadores suportados, juntamente com exemplos, pode ser encontrada no documento:
 
-➡️ [`docs/Mutators.rst`](./Mutators.rst)
+[`docs/Mutators.rst`](./Mutators.rst)
 
 ### Configuração do Mull
 
@@ -445,7 +445,7 @@ O Mull permite configurar quais operadores de mutação serão utilizados, além
 
 As opções de configuração e exemplos práticos estão documentados em:
 
-➡️ [`docs/configuring_mull.md`](./configuring_mull.md)
+[`docs/configuring_mull.md`](./configuring_mull.md)
 
 ### Modos de operação do Mull
 
@@ -453,7 +453,7 @@ O Mull pode ser usado em diferentes modos de operação: standalone e integrado 
 
 Os modos de operação do Mull são apresentados de forma mais detalhada em:
 
-➡️ [`docs/operation_modes.md`](./operation_modes.md)
+[`docs/operation_modes.md`](./operation_modes.md)
 
 ## Considerações finais
 Os tópicos apresentados neste relatório foram elaborados com base na documentação oficial do Mull.
