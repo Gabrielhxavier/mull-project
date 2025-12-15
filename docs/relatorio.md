@@ -38,7 +38,7 @@ sudo apt-get update && apt-get install mull-19
 Para verifica a instalação, execute:
 
 ```bash
-$ mull-runner-19 --version
+mull-runner-19 --version
 ```
 A saída esperada deve ser semelhante a:
 
