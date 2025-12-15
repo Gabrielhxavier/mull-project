@@ -151,7 +151,7 @@ A ferramenta Mull foi configurada através do arquivo `mull.yml`.
 Para este projeto, foram utilizados os seguintes grupos de mutadores:
 
 - `cxx_comparison` (mutações em operadores de comparação: `<`, `>`, `<=`, `==`, etc.)
-- `cxx_logical` (mutações em operadores lógicos: `&&`, `||`)
+- `cxx_logical` (mutações em operadores lógicos)
 
 Esses mutadores são adequados para o SUT, pois o código contém predominantemente condições e comparações.
 
