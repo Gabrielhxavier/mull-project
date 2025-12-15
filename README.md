@@ -6,7 +6,7 @@ Para isso, foi desenvolvido um código simples em C, acompanhado de uma suíte d
 
 ---
 
-## 📁 Project structure
+## Project structure
 
 A estrutura de diretórios do projeto é apresentada a seguir:
 
@@ -28,7 +28,7 @@ mull-project/
 ```
 Para executar o passo a passo completo do desenvolvimento e da utilização da ferramenta, consulte o arquivo:
 
-➡️ [`docs/relatorio.md`](./docs/relatorio.md)
+[`docs/relatorio.md`](./docs/relatorio.md)
 
-## 👨‍💻 Autor
+## Autor
 Desenvolvido por: Gabriel Xavier
