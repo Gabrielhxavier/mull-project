@@ -417,12 +417,12 @@ Para mais informações, consulte:
 O Mull permite a geração de diferentes tipos de relatórios a partir de uma mesma execução de mutation testing:
 
 ```bash
-mkdir -p patches
-
 mull-runner-19 ./test_brake_status.mull \
-  --reporters=IDE,Patches \
+  --reporters=IDE \
+  --reporters=Patches \
   --report-dir=patches \
   -ide-reporter-show-killed
+
 ```
 ## Conceitos adicionais do Mull
 
